@@ -5,9 +5,11 @@ package net.mat0u5.do2smpmanager.events;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.mat0u5.do2smpmanager.Main;
+import net.mat0u5.do2smpmanager.utils.DiscordUtils;
 import net.mat0u5.do2smpmanager.utils.OtherUtils;
 import net.mat0u5.do2smpmanager.utils.PermissionManager;
 import net.minecraft.block.Block;
@@ -25,13 +27,18 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.concurrent.TimeUnit;
+
 public class Events {
+
+    public static long discordDescriptionUpdate = 0;
 
     public static void register() {
         ServerLifecycleEvents.SERVER_STARTING.register(Events::onServerStart);
         ServerLifecycleEvents.SERVER_STOPPING.register(Events::onServerStopping);
         UseBlockCallback.EVENT.register(Events::onBlockUse);
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> onPlayerJoin(server, handler.getPlayer()));
+        ServerTickEvents.END_SERVER_TICK.register(Events::onServerTickEnd);
     }
 
     private static void onPlayerJoin(MinecraftServer server, ServerPlayerEntity player) {
@@ -62,5 +69,16 @@ public class Events {
         if (handItem.getName().toString().isEmpty()) return ActionResult.PASS;
         if (!lock.contains(handItem.getName().getString())) return ActionResult.PASS;
         return ActionResult.PASS;
+    }
+    private static void onServerTickEnd(MinecraftServer server) {
+        try {
+            discordDescriptionUpdate++;
+            if (discordDescriptionUpdate >=12500) {
+                discordDescriptionUpdate=0;
+                new DiscordUtils().updateDiscordChannelDescription();
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

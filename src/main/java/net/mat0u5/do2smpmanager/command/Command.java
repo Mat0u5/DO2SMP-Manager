@@ -11,6 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.*;
 import net.minecraft.util.math.BlockPos;
 
@@ -28,6 +29,12 @@ public class Command {
                                 CommandRegistryAccess commandRegistryAccess,
                                 CommandManager.RegistrationEnvironment registrationEnvironment) {
 
+        dispatcher.register(
+            literal("playerlist")
+                .executes(context -> Command.playerList(
+                    context.getSource())
+                )
+        );
         dispatcher.register(
             literal("blocklock")
                 .requires(source -> (isAdmin(source.getPlayer())))
@@ -72,6 +79,27 @@ public class Command {
         final PlayerEntity self = source.getPlayer();
         self.sendMessage(Text.of("Started Block Lock Search..."));
         new BlockScanner().scanArea(lock,server.getOverworld(),new BlockPos(fromX, fromY, fromZ),new BlockPos(toX, toY, toZ), source.getPlayer());
+        return 1;
+    }
+    public static int playerList(ServerCommandSource source) {
+        MinecraftServer server = source.getServer();
+        final PlayerEntity self = source.getPlayer();
+
+        int playerCount = 0;
+        MutableText message = Text.translatable("There are "+server.getPlayerManager().getPlayerList().size()+" players online: ");
+        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+            playerCount++;
+            message = message.append(player.getDisplayName());
+            if (playerCount != server.getPlayerManager().getPlayerList().size()) {
+                message = message.append(", ");
+            }
+        }
+        if (self != null) {
+            self.sendMessage(message);
+        }
+        else {
+            System.out.println(message.getString());
+        }
         return 1;
     }
 }
