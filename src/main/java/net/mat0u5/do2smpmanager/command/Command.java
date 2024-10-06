@@ -3,16 +3,21 @@ package net.mat0u5.do2smpmanager.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.mat0u5.do2smpmanager.utils.ItemManager;
 import net.mat0u5.do2smpmanager.world.BlockScanner;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.*;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.Collection;
@@ -73,12 +78,29 @@ public class Command {
                     )
                 )
         );
+        dispatcher.register(
+            literal("casino")
+                .requires(source -> (isAdmin(source.getPlayer()) || source.getPlayer().getUuidAsString().equalsIgnoreCase("3a41ea41-6876-47ea-8cf5-89ef8b375011")))
+                .then(literal("makeItem")
+                    .executes(context -> Command.makeCasino(
+                        context.getSource())
+                    )
+                )
+        );
+    }
+    public static int makeCasino(ServerCommandSource source) {
+        MinecraftServer server = source.getServer();
+        final PlayerEntity self = source.getPlayer();
+        if (self == null) return -1;
+       ItemManager.setComponentInt(self.getStackInHand(Hand.MAIN_HAND), "CasinoItem", 1);
+        return 1;
     }
     public static int executeLock(ServerCommandSource source, int fromX, int fromY, int fromZ, int toX, int toY, int toZ, String lock) {
         MinecraftServer server = source.getServer();
         final PlayerEntity self = source.getPlayer();
+        if (self == null) return -1;
         self.sendMessage(Text.of("Started Block Lock Search..."));
-        new BlockScanner().scanArea(lock,server.getOverworld(),new BlockPos(fromX, fromY, fromZ),new BlockPos(toX, toY, toZ), source.getPlayer());
+        new BlockScanner().scanArea(lock, (ServerWorld) self.getWorld(),new BlockPos(fromX, fromY, fromZ),new BlockPos(toX, toY, toZ), source.getPlayer());
         return 1;
     }
     public static int playerList(ServerCommandSource source) {

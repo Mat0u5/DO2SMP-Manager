@@ -25,12 +25,14 @@ jobs:
         run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+          
       - name: Make the commit message compatible with JSON
         run: |
           # Escape the commit message for JSON
           COMMIT_MESSAGE=$(echo -n "${{ github.event.head_commit.message }}" | sed 's/%0A/\\n/g' | jq -s -Rr @json)
           COMMIT_MESSAGE=${COMMIT_MESSAGE:1:-1}
           echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
+          
       - name: Discord Message
         uses: satak/webrequest-action@master
         with:
