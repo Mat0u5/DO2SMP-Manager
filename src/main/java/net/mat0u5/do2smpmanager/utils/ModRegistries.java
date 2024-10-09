@@ -8,6 +8,7 @@ public class ModRegistries {
     public static void registerModStuff() {
         registerCommands();
         registerEvents();
+        TextUtils.setEmotes();
     }
     private static void registerCommands() {
         CommandRegistrationCallback.EVENT.register(Command::register);

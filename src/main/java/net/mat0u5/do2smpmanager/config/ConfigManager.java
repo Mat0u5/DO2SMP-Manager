@@ -25,6 +25,7 @@ public class ConfigManager {
             try {
                 configFile.createNewFile();
                 try (OutputStream output = new FileOutputStream(configFile)) {
+                    properties.setProperty("webhook_url","");
                     properties.setProperty("webhook_token","");
                     properties.setProperty("server_chat_channel_id","");
 

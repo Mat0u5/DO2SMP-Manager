@@ -3,7 +3,8 @@
 	"package": "net.mat0u5.do2smpmanager.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
-		"ExampleMixin"
+		"ServerPlayNetworkHandlerMixin",
+		"PlayerManagerMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
