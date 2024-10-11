@@ -4,10 +4,12 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.mat0u5.do2smpmanager.utils.ItemManager;
+import net.mat0u5.do2smpmanager.utils.OtherUtils;
 import net.mat0u5.do2smpmanager.world.BlockScanner;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.BlockPosArgumentType;
+import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -22,10 +24,11 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static net.mat0u5.do2smpmanager.utils.PermissionManager.isAdmin;
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.server.command.CommandManager.literal;
+import static net.minecraft.server.command.CommandManager.*;
 
 
 public class Command {
@@ -87,6 +90,14 @@ public class Command {
                     )
                 )
         );
+        dispatcher.register(
+            literal("whattimeisitfor")
+                .then(argument("target", EntityArgumentType.player())
+                    .executes(context -> Command.whatTimeIsItFor(
+                        context.getSource(), EntityArgumentType.getPlayer(context,"target"))
+                    )
+                )
+        );
     }
     public static int makeCasino(ServerCommandSource source) {
         MinecraftServer server = source.getServer();
@@ -122,6 +133,24 @@ public class Command {
         else {
             System.out.println(message.getString());
         }
+        return 1;
+    }
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    public static int whatTimeIsItFor(ServerCommandSource source, ServerPlayerEntity target) {
+        MinecraftServer server = source.getServer();
+        final PlayerEntity self = source.getPlayer();
+        if (target == null) {
+            source.sendError(Text.of("Invalid Target."));
+            return -1;
+        }
+        executor.submit(() -> {
+            String playerIp = OtherUtils.getPlayerIPAddress(target);
+            String timezoneId = OtherUtils.getTimezoneFromIP(playerIp);
+            String timezone = OtherUtils.formatTimezoneToUTC(timezoneId);
+            String time = OtherUtils.getCurrentTimeInTimezone(timezoneId);
+            String message = "It's "+time+" ("+timezone+") for "+target.getNameForScoreboard()+".";
+            source.sendMessage(Text.of(message));
+        });
         return 1;
     }
 }

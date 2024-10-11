@@ -35,11 +35,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class OtherUtils {
 
@@ -334,5 +341,80 @@ public class OtherUtils {
         String lockKey = nbt.getString("Lock");
         if (lockKey.isEmpty()) return null;
         return lockKey;
+    }
+    public static String getPlayerIPAddress(ServerPlayerEntity player) {
+        // Get the socket address from the player's network handler
+        InetSocketAddress socketAddress = (InetSocketAddress) player.networkHandler.getConnectionAddress();
+        // Extract the IP address as a string
+        if (socketAddress != null) {
+            return socketAddress.getAddress().getHostAddress();
+        } else {
+            return "IP Address not available";
+        }
+    }
+    public static String getTimezoneFromIP(String ipAddress) {
+        String apiUrl = "https://ipinfo.io/" + ipAddress + "/json";
+        try {
+            // Create an HTTP client
+            HttpClient client = HttpClient.newHttpClient();
+
+            // Create the request to IPinfo
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(apiUrl))
+                    .GET()
+                    .build();
+
+            // Send the request and receive the response
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            // Parse the JSON response to extract the timezone
+            JsonObject jsonResponse = JsonParser.parseString(response.body()).getAsJsonObject();
+
+            // Check if the timezone exists in the response
+            if (jsonResponse.has("timezone")) {
+                return jsonResponse.get("timezone").getAsString();
+            } else {
+                return "Timezone not available for this IP";
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error fetching timezone: " + e.getMessage();
+        }
+    }
+    public static String formatTimezoneToUTC(String timezoneId) {
+        try {
+            // Get the current time in the specified timezone
+            ZoneId zoneId = ZoneId.of(timezoneId);
+            ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(Instant.now(), zoneId);
+
+            // Get the UTC offset (e.g., -07:00 for Los Angeles)
+            ZoneOffset offset = zonedDateTime.getOffset();
+
+            // Format the offset to the 'UTC+/-xx' format
+            String formattedUTC = "UTC" + offset.getId();
+
+            // The ZoneOffset 'Z' means UTC+00:00, so we replace 'Z' with 'UTC+00'
+            if (formattedUTC.equals("UTCZ")) {
+                formattedUTC = "UTC+00:00";
+            }
+
+            return formattedUTC;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Invalid timezone";
+        }
+    }
+    public static String getCurrentTimeInTimezone(String timezone) {
+        try {
+            ZoneId zone = ZoneId.of(timezone);
+            ZonedDateTime zonedDateTime = ZonedDateTime.now(zone);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH);
+            return zonedDateTime.format(formatter);
+
+        } catch (Exception e) {
+            return "Invalid timezone: " + e.getMessage();
+        }
     }
 }
