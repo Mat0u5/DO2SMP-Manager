@@ -8,7 +8,8 @@ import java.util.regex.Pattern;
 
 public class TextUtils {
     private static HashMap<List<String>, List<String>> emotes = new HashMap<List<String>, List<String>>();
-    private static final List<String> maxOne = List.of("");
+    private static final List<String> maxOne = List.of("warden", "warden_pointing", "warden_pointing_right"
+            , "warden_pointing_left", "warden_scream", "ravager");
     public static void setEmotes() {
         emotes.put(List.of("skull"),List.of("☠"));
         emotes.put(List.of("smile"),List.of("☺"));
@@ -35,6 +36,12 @@ public class TextUtils {
         emotes.put(List.of("smol","smol_person"), List.of("\uE0BA", "1294225666631536704"));
         emotes.put(List.of("stuff","stuffie","mrstuff456"), List.of("\uE0BB", "1294225667910664192"));
         emotes.put(List.of("ziz","zizi","zizola"), List.of("\uE0BC", "1294225669185867910"));
+
+        emotes.put(List.of("warden"), List.of("\uE0BD"));
+        emotes.put(List.of("warden_pointing","warden_pointing_right"), List.of("\uE0BE"));
+        emotes.put(List.of("warden_pointing_left"), List.of("\uE0BF"));
+        emotes.put(List.of("warden_scream"), List.of("\uE0C0"));
+        emotes.put(List.of("ravager"), List.of("\uE0C1"));
     }
     public static String replaceEmotes(String input) {
         for (String maxOneEmote : maxOne) {
