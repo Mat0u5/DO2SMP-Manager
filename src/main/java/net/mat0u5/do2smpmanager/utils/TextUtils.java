@@ -37,11 +37,11 @@ public class TextUtils {
         emotes.put(List.of("stuff","stuffie","mrstuff456"), List.of("\uE0BB", "1294225667910664192"));
         emotes.put(List.of("ziz","zizi","zizola"), List.of("\uE0BC", "1294225669185867910"));
 
-        emotes.put(List.of("warden"), List.of("\uE0BD"));
-        emotes.put(List.of("warden_pointing","warden_pointing_right"), List.of("\uE0BE"));
-        emotes.put(List.of("warden_pointing_left"), List.of("\uE0BF"));
-        emotes.put(List.of("warden_scream"), List.of("\uE0C0"));
-        emotes.put(List.of("ravager"), List.of("\uE0C1"));
+        emotes.put(List.of("warden"), List.of("\uE0BD","1294941254852804648"));
+        emotes.put(List.of("warden_pointing","warden_pointing_right"), List.of("\uE0BE","1294941553453699137"));
+        emotes.put(List.of("warden_pointing_left"), List.of("\uE0BF","1294941551725772871"));
+        emotes.put(List.of("warden_scream"), List.of("\uE0C0","1294941256832651329"));
+        emotes.put(List.of("ravager"), List.of("\uE0C1","1294941258313240586"));
     }
     public static String replaceEmotes(String input) {
         for (String maxOneEmote : maxOne) {
