@@ -25,6 +25,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 
 import java.util.concurrent.TimeUnit;
@@ -77,8 +78,17 @@ public class Events {
                 discordDescriptionUpdate=0;
                 new DiscordUtils().updateDiscordChannelDescription();
             }
+            playerPositionChecker(server);
         }catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    private static void playerPositionChecker(MinecraftServer server) {
+        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+
+        }
+    }
+    private static boolean isPlayerInArea(ServerPlayerEntity player, Box box) {
+        return player.getBoundingBox().intersects(box);
     }
 }
