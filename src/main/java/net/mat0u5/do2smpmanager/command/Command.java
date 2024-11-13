@@ -110,7 +110,7 @@ public class Command {
         MinecraftServer server = source.getServer();
         final PlayerEntity self = source.getPlayer();
         if (self == null) return -1;
-        self.sendMessage(Text.of("Started Block Lock Search..."));
+        self.sendMessage(Text.of("Started Block Lock Search..."), false);
         new BlockScanner().scanArea(lock, (ServerWorld) self.getWorld(),new BlockPos(fromX, fromY, fromZ),new BlockPos(toX, toY, toZ), source.getPlayer());
         return 1;
     }
@@ -128,7 +128,7 @@ public class Command {
             }
         }
         if (self != null) {
-            self.sendMessage(message);
+            self.sendMessage(message, false);
         }
         else {
             System.out.println(message.getString());

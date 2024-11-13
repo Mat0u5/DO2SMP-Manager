@@ -92,8 +92,8 @@ public class BlockScanner extends MSPTUtils {
                 int percent = listPos / div;
                 if (!percentCompleted.contains(percent) ) {
                     percentCompleted.add(percent);
-                    player.sendMessage(Text.of("[Block Database Searcher] Processed " + percent + "% of positions."));
-                    player.sendMessage(Text.of("-Modified " + lockOrUnlock + " blocks."));
+                    player.sendMessage(Text.of("[Block Database Searcher] Processed " + percent + "% of positions."), false);
+                    player.sendMessage(Text.of("-Modified " + lockOrUnlock + " blocks."), false);
                     System.out.println("[Block Database Searcher] Processed " + percent + "% of positions.");
                 }
             }
@@ -143,8 +143,8 @@ public class BlockScanner extends MSPTUtils {
 
     @Override
     protected void stoppedFunction() {
-        player.sendMessage(Text.of("§aBlock scan complete."));
+        player.sendMessage(Text.of("§aBlock scan complete."), false);
         System.out.println("Block scan complete.");
-        player.sendMessage(Text.of("- Modified " + lockOrUnlock + " blocks."));
+        player.sendMessage(Text.of("- Modified " + lockOrUnlock + " blocks."), false);
     }
 }
