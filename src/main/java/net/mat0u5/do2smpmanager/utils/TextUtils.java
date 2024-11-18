@@ -27,11 +27,11 @@ public class TextUtils {
         emotes.put(List.of("bates","batesminecraft"), List.of("\uE0B1", "1294225705152020540"));
         emotes.put(List.of("eric","ericeldrick"), List.of("\uE0B2", "1294225672650231819"));
         emotes.put(List.of("fui","fuinobi"), List.of("\uE0B3", "1294225654203809805"));
-        emotes.put(List.of("hazel","uwu","uwu_hazel"), List.of("\uE0B4", "1294225655726080052"));
-        emotes.put(List.of("kyuu","shiny_kyuu"), List.of("\uE0B5", "1294225657693212684"));
+        emotes.put(List.of("hazel","uwu","uwu_hazel"), List.of("\uE0B4", "1308181026547437578"));
+        emotes.put(List.of("kyuu","shiny_kyuu"), List.of("\uE0B5", "1308181027872575548"));
         emotes.put(List.of("mopag","mopag_24"), List.of("\uE0B6", "1294225658909691915"));
         emotes.put(List.of("nicky","nicky_001"), List.of("\uE0B7", "1294225660960702545"));
-        emotes.put(List.of("nifty","thedogcape","niftyname641"), List.of("\uE0B8", "1294225662944743516"));
+        emotes.put(List.of("nifty","thedogcape","niftyname641"), List.of("\uE0B8", "1308181024101896395"));
         emotes.put(List.of("ralmen","ralmenkuro"), List.of("\uE0B9", "1294225664068816906"));
         emotes.put(List.of("smol","smol_person"), List.of("\uE0BA", "1294225666631536704"));
         emotes.put(List.of("stuff","stuffie","mrstuff456"), List.of("\uE0BB", "1294225667910664192"));
