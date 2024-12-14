@@ -46,13 +46,8 @@ public class DiscordUtils {
         }
     }
     public void updateDiscordChannelDescription() {
-        List<ServerPlayerEntity> players = Main.server.getPlayerManager().getPlayerList();
-        List<String> playerNames = new ArrayList<>();
-        for (ServerPlayerEntity player : players) {
-            playerNames.add(player.getNameForScoreboard());
-        }
-        if (playerNames.contains("TangoCam")) playerNames.remove("TangoCam");
-        String description = "Players online (" + playerNames.size() + "): " + String.join(", ",playerNames);
+        String[] players = Main.server.getPlayerNames();
+        String description = "Players online (" + players.length + "): " + String.join(", ",players);
         DiscordBot discordBot = new DiscordBot();
         discordBot.startBot(getWebhookToken(), getChatChannelId(),true,description);
     }
